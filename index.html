@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Naarm Visit</title>
+<meta name="theme-color" content="#006d77">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Naarm Visit">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: light, joyful, airy — a family holiday, read on a phone
+   IDEA: a travel poster per day; the day line is a tram route underneath
+   PICTURE: full-bleed illustrated scene of the day's place (or your own uploaded photo) behind the title
+   COLOUR and TYPE: scene colours lead; teal + coral accents on warm white; Outfit 800 title, Figtree body
+   LAYOUT: poster hero → slim day line → short route + small side facts → folded extras */
+:root{color-scheme:light dark;--bg:light-dark(#fbfaf6,#0d181b);--ink:light-dark(#17262a,#e8efee);--mut:light-dark(#66777a,#94a8a9);
+--teal:#006d77;--soft:light-dark(#eef5f4,#132a2e);--coral:#e85d3f;--card:light-dark(#fff,#13232700);--line:light-dark(#e1e8e7,#24383b)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Figtree,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:Outfit,system-ui,sans-serif;line-height:1.05;text-wrap:balance;margin:0}
+a{color:var(--teal)}@media(prefers-color-scheme:dark){:root:not([data-theme=light]) a{color:#6fd3db}}:root[data-theme=dark] a{color:#6fd3db}
+.wrap{max-width:1100px;margin:0 auto;padding:0 max(5vw,18px)}
+.hero{position:relative;min-height:clamp(380px,62vh,560px);color:#fff;display:flex;align-items:flex-end;overflow:hidden;background:#24445a}
+.hero .bg,.hero .bg svg,.hero .bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0000 35%,#0009)}
+.hero .in{position:relative;z-index:1;width:100%;padding-bottom:clamp(28px,5vw,56px)}
+.hero h1{font-weight:800;font-size:clamp(48px,10vw,108px);letter-spacing:-.02em;text-shadow:0 2px 24px #0004}
+.hero p{margin:10px 0 0;font-size:clamp(18px,2.4vw,24px);font-family:Outfit;font-weight:300;text-shadow:0 1px 12px #0006}
+.hero p b{font-weight:600}
+.dates{position:absolute;top:18px;right:max(5vw,18px);z-index:2}
+.dates summary{list-style:none;cursor:pointer;background:#fff3;backdrop-filter:blur(8px);border-radius:999px;padding:10px 18px;font-weight:600;min-height:44px}
+.dates summary::-webkit-details-marker{display:none}
+.dates .pop{position:absolute;right:0;margin-top:8px;background:var(--bg);color:var(--ink);border-radius:16px;padding:16px;display:grid;gap:10px;width:240px;box-shadow:0 12px 40px #0004}
+label{font-size:13px;font-weight:600;color:var(--mut);display:block}
+input,select,button{font:inherit;font-size:16px}
+input,select{width:100%;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);min-height:44px}
+button{min-height:44px;padding:8px 18px;border-radius:999px;border:0;background:var(--coral);color:#fff;font-weight:600;cursor:pointer}
+button.ghost{background:transparent;color:inherit;border:1px solid var(--line)}
+:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+.line{display:flex;overflow-x:auto;padding:22px 0 10px;scrollbar-width:thin}
+.stop{flex:0 0 76px;text-align:center;background:none;color:var(--ink);padding:0 2px 6px;min-height:auto;font-weight:400;position:relative;border-radius:10px}
+.stop::before{content:"";position:absolute;top:15px;left:0;right:0;height:4px;background:var(--line)}
+.stop i{position:relative;display:block;margin:4px auto 6px;width:26px;height:26px;border-radius:50%;border:4px solid var(--bg)}
+.stop.on i{box-shadow:0 0 0 3px var(--coral);transform:scale(1.2)}
+.stop b{display:block;font-size:13px;font-weight:600}.stop span{font-size:12px;color:var(--mut)}
+.stop.on b{color:var(--coral)}
+.main{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:clamp(32px,6vw,80px);padding:clamp(28px,5vw,56px) 0}
+@media(max-width:820px){.main{grid-template-columns:minmax(0,1fr)}}
+.route{list-style:none;margin:0;padding:0}
+.route li{display:grid;grid-template-columns:72px 16px minmax(0,1fr);gap:14px;padding-bottom:26px;position:relative}
+.route li::after{content:"";position:absolute;left:93px;top:22px;bottom:2px;width:2px;background:var(--line)}
+.route li:last-child::after{display:none}
+.route time{font-family:Outfit;font-weight:600;font-size:16px;text-align:right;white-space:nowrap;color:var(--mut)}
+.route .pin{width:14px;height:14px;border-radius:50%;border:3px solid var(--kc);margin-top:6px;background:var(--bg)}
+.route .t{font-size:18px}
+.links{font-size:14px;display:flex;flex-wrap:wrap;gap:2px 14px;margin-top:2px}
+.route .mine .pin{border-color:var(--coral)}
+.del{background:none;color:var(--mut);border:0;padding:0;min-height:auto;font-size:13px;font-weight:400;text-decoration:underline}
+.side>*+*{margin-top:28px}
+.side h3{font-size:14px;font-weight:600;color:var(--mut);margin-bottom:6px;font-family:Figtree}
+.side p{margin:0;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chips span{background:var(--soft);border-radius:999px;padding:5px 12px;font-size:14px}
+.tip{border-left:3px solid var(--coral);padding-left:12px;font-size:15px;margin:6px 0}
+details.fold{border-top:1px solid var(--line);padding:16px 0}
+details.fold summary{cursor:pointer;font-family:Outfit;font-weight:600;font-size:19px;min-height:32px}
+details.fold[open] summary{margin-bottom:14px}
+.addf{display:grid;grid-template-columns:100px minmax(0,1fr);gap:8px;max-width:560px}.addf .full{grid-column:1/-1}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:12px}
+.photos figure{margin:0;position:relative}.photos img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;display:block}
+.photos .del{position:absolute;top:4px;right:4px;background:#000a;color:#fff;border-radius:6px;padding:2px 6px;text-decoration:none}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.extras{padding-bottom:64px}
+.list{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.list li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px}
+.ck{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:24px 48px}
+.ck h3{font-size:16px;margin-bottom:8px}.ck ul{list-style:none;margin:0;padding:0}
+.ck li label{display:flex;gap:12px;align-items:center;font-size:16px;font-weight:400;color:var(--ink);min-height:40px;cursor:pointer}
+.ck input[type=checkbox]{width:22px;height:22px;min-height:0;accent-color:var(--teal);flex:none}
+.ck li.done span{text-decoration:line-through;color:var(--mut)}
+.ck form{display:flex;gap:8px;margin-top:8px}.ck form button{padding:8px 14px}
+.prog{font-family:Figtree;font-weight:400;font-size:14px;color:var(--mut);margin-left:8px}
+.ok{color:#1b8a52}.no{color:var(--coral)}
+.note{font-size:13px;color:var(--mut)}
+@media(max-width:600px){.route li{grid-template-columns:56px 14px minmax(0,1fr);gap:10px}.route li::after{left:72px}.route .t{font-size:17px}}
+@media(prefers-reduced-motion:no-preference){.hero .bg{animation:fade .6s ease}@keyframes fade{from{opacity:.3}}.stop i{transition:transform .2s}}
+</style>
+</head>
+<body>
+<header class="hero" id="hero">
+ <div class="bg" id="bg"></div>
+ <details class="dates"><summary>Dates</summary><div class="pop">
+  <div><label for="d1">Arrive</label><input type="date" id="d1"></div>
+  <div><label for="d2">Leave</label><input type="date" id="d2"></div>
+  <div><label for="hm">Home address (saved on this phone only)</label><input id="hm" placeholder="Street, suburb"></div>
+  <button class="ghost" id="reset">Reset plan</button></div></details>
+ <div class="in wrap"><h1>Naarm Visit</h1><p id="sub"></p></div>
+</header>
+
+<nav class="wrap"><div class="line" id="line" role="tablist" aria-label="Trip days"></div></nav>
+
+<main class="wrap">
+ <div class="main"><ol class="route" id="route"></ol><aside class="side" id="side"></aside></div>
+ <details class="fold"><summary>Add a stop</summary>
+  <form class="addf" id="addf"><input id="at" placeholder="Time" aria-label="Time"><input id="ax" placeholder="What" aria-label="What" required><input class="full" id="ap" placeholder="Place (for the map)" aria-label="Place"><button class="full" type="submit">Add</button></form></details>
+ <details class="fold"><summary>Photos</summary>
+  <p class="note">Your first photo becomes this day's header. Saved in this browser only.</p>
+  <input type="file" id="pf" accept="image/*" multiple aria-label="Add photos"><div class="photos" id="photos"></div></details>
+ <div class="row" id="acts"></div>
+
+ <div class="extras" style="margin-top:48px">
+ <details class="fold" open><summary>Checklist <span class="prog" id="prog"></span></summary><div class="ck" id="ck"></div></details>
+ <details class="fold"><summary>Your list: what's doable</summary><ul class="list" id="check"></ul></details>
+ <details class="fold"><summary>Fares &amp; tips</summary><ul class="list">
+  <li><span>🎫</span><span>Half-price fares until 1 Jan 2027: max <b>$5.70/day</b> per person, regional trains included. Higher from January.</span></li>
+  <li><span>💳</span><span>One myki each. Trams in the CBD are free.</span></li>
+  <li><span>☀️</span><span>Over 32°C or a Total Fire Ban? Swap hikes for beach or NGV.</span></li>
+  <li><span>🍛</span><span>Crossways, 147 Swanston St: vegetarian, about $10.</span></li>
+  <li><span>📱</span><span>Check the PTV app the day before.</span></li></ul></details>
+ </div>
+</main>
+
+<script>
+{
+const LISTS={before:["Visas approved & passports valid","Travel insurance with health cover","Graduation guest tickets confirmed","Medicines in original packs + prescriptions","Declare all food at customs","Type I plug adapters","Phone plan: eSIM or roaming","Walking shoes, hat, sunglasses, swimwear","Warm layer + rain jacket","Spare bedding & towels ready","Stock masala, chai, groceries","PTV app + offline Google Maps","Emergency card: address, your number, 000"],during:["Buy a myki each & top up","Water bottles + picnic mat + cooler bag","Sunscreen SPF 50 every outing","Check weather & fire ban each morning","Check PTV times the night before","Charge phones + power bank","Graduation outfits ironed","Agree a NYE meeting point","Souvenirs within customs limits"]};
+const LN={before:"Before they arrive",during:"During the visit"};
+const K={arrive:["Arrival","#8a6fd1"],city:["City","#006d77"],beach:["Beach","#2a8fd6"],hike:["Nature","#3d8b4a"],regional:["Day trip","#c27a12"],home:["Home","#b0577a"],fixed:["Big day","#e85d3f"],work:["Work","#8a9799"]};
+const P={
+arrive:{t:"Arrival",k:"arrive",sc:"arrive",go:"Airport → home (PTV app)",s:[["Arrive","Unpack & rest","HOME"],["5:30pm","Southbank river walk","Southbank Promenade"],["8pm","Early night"]],e:["Home dinner"],n:["Keep day one empty."]},
+city:{t:"City lanes & lights",k:"city",sc:"city",go:"Walk 15 min · free trams",s:[["10am","Fed Square","Federation Square Melbourne"],["10:45","Hosier Lane & Degraves St","Hosier Lane Melbourne"],["12pm","Lunch at Crossways","Crossways 147 Swanston St Melbourne"],["1:15","State Library dome","State Library Victoria"],["7:30pm","Myer Christmas windows","Myer Melbourne Bourke Street"],["8:30","Fed Square tree","Federation Square Melbourne"]],e:["Crossways","Chinatown"],n:["Tree lit until 25 Dec."]},
+gardens:{t:"Gardens & Shrine",k:"city",sc:"gardens",go:"Walk 20 min",s:[["9:30am","Shrine balcony view","Shrine of Remembrance"],["10:30","Botanic Gardens","Royal Botanic Gardens Melbourne"],["12:30pm","Picnic by the lake","Royal Botanic Gardens Melbourne Ornamental Lake"],["2pm","NGV (free)","NGV International"]],e:["Picnic"],n:["NGV is air-conditioned, so it's good on a hot day."]},
+stkilda:{t:"St Kilda & penguins",k:"beach",sc:"dusk",go:"Tram 12 from Clarendon St · 25 min",s:[["2pm","Esplanade & swim","St Kilda Beach"],["4:30","Acland St","Acland Street St Kilda"],["6:30","Beach picnic","St Kilda Foreshore"],["8:30pm","Penguins on the pier","St Kilda Pier"]],e:["Picnic","Fish & chips"],n:["Penguins arrive after sunset. No flash."]},
+brighton:{t:"Brighton bathing boxes",k:"beach",sc:"beach",go:"Sandringham line · 25 min",s:[["9:30am","Train to Brighton Beach","Brighton Beach Station"],["10:15","Bathing boxes","Brighton Bathing Boxes"],["11am","Swim & picnic","Brighton Beach Victoria"],["1:30pm","Bay trail to Middle Brighton","Middle Brighton Pier"]],e:["Picnic"],n:["Little shade. Go early."]},
+williamstown:{t:"Williamstown",k:"beach",sc:"bay",go:"Williamstown line · 30 min",s:[["10am","Gem Pier & Nelson Place","Gem Pier Williamstown"],["11:30","Skyline at Point Gellibrand","Point Gellibrand Heritage Park"],["1pm","Picnic","Commonwealth Reserve Williamstown"],["2:30","Williamstown Beach","Williamstown Beach"]],e:["Picnic","Fish & chips"],n:["Take the train. The ferry is paid."]},
+yarra:{t:"Yarra Bend gorge",k:"hike",sc:"river",go:"Train to Victoria Park · 10 min",s:[["10am","Dights Falls","Dights Falls"],["10:45","River trail, 3 km","Studley Park Boathouse"],["12:15pm","Picnic at Kanes Bridge","Kanes Bridge Yarra Bend"],["1:30","Abbotsford Convent","Abbotsford Convent"]],e:["Picnic"],n:["Gentle. Good for jet-lag week."]},
+markets:{t:"Market & Carlton",k:"city",sc:"city",go:"Free tram",s:[["9am","Queen Vic Market","Queen Victoria Market"],["11:30","Carlton Gardens","Carlton Gardens"],["2pm","Lygon St & uni quad","University of Melbourne Old Quad"]],e:["Market food","Lygon gelato"],n:["Market is closed Mon & Wed."]},
+dandenongs:{t:"Dandenong Ranges",k:"hike",sc:"forest",go:"Belgrave line 60 min + bus 688",s:[["8:15am","Train to Upper Ferntree Gully","Upper Ferntree Gully Station"],["9:45","1000 Steps / Lyrebird Track","1000 Steps Kokoda Track Memorial Walk"],["12:30pm","Bus 688","William Ricketts Sanctuary"],["1:15","William Ricketts Sanctuary","William Ricketts Sanctuary"],["3pm","Olinda village","Olinda Victoria"]],e:["Picnic","Olinda bakeries"],n:["688 is roughly hourly. Screenshot the timetable.","Closed on fire-ban days."]},
+warburton:{t:"Warburton & the Aqueduct",k:"regional",sc:"valley",go:"Lilydale line + bus 683 · 2 hrs",s:[["7:45am","Train to Lilydale","Lilydale Station"],["10am","Yarra River walk","Warburton Swing Bridge"],["12pm","Riverside picnic","Warburton Victoria"],["1:30","O'Shannassy Aqueduct","O'Shannassy Aqueduct Trail"],["4:45","Bus back","Warburton Victoria"]],e:["Picnic","Main St cafés"],n:["Steep 800 m climb to the aqueduct. The river walk is fine on its own."]},
+surfcoast:{t:"Torquay cliffs",k:"regional",sc:"coast",go:"V/Line to Geelong + bus 53",s:[["8am","V/Line to Geelong","Southern Cross Station"],["10:15","Torquay Front Beach","Torquay Front Beach"],["1pm","Clifftop walk to Jan Juc","Point Danger Torquay"],["4pm","Bus 52, then train home","Jan Juc Beach"]],e:["Picnic","Fish & chips"],n:["Swim between the flags."]},
+geelong:{t:"Geelong waterfront",k:"regional",sc:"bay",go:"V/Line · 60 min",s:[["11am","Waterfront bollards","Geelong Waterfront"],["12:30pm","Eastern Beach swim","Eastern Beach Geelong"],["2pm","Botanic Gardens","Geelong Botanic Gardens"]],e:["Picnic"],n:["Flat and slow."]},
+home:{t:"Home day",k:"home",sc:"home",go:"Nowhere",s:[["9am","Balcony chai"],["11am","Cook together"],["4pm","Games & photo album"],["8pm","Movie night"]],e:["Home cooking"],n:["Optional treat: Inner Studio sauna, South Yarra (paid)."]},
+graduation:{t:"Graduation day",k:"fixed",sc:"grad",go:"Walk 20 min to Docklands",s:[["Ceremony","Marvel Stadium","Marvel Stadium"],["After","Harbour photos","Docklands Victoria Harbour"],["Afternoon","RMIT & State Library photos","RMIT University City Campus"],["Evening","Celebration dinner","Lygon Street Carlton"]],e:["Your pick"],n:["Confirm guest tickets."]},
+christmas:{t:"Christmas Day",k:"fixed",sc:"gardens",go:"Reduced services",s:[["Morning","Slow breakfast"],["12pm","Picnic in the Gardens","Royal Botanic Gardens Melbourne"],["Evening","River lights walk","Southbank Promenade"]],e:["Picnic hamper"],n:["Most places closed."]},
+work:{t:"Parents' easy day",k:"work",sc:"city",go:"Walking only",s:[["10am","NGV & Arts Centre","NGV International"],["3pm","Southbank stroll","Southbank Promenade"],["Evening","Dinner together"]],e:["Home"],n:["Teesta at work."]},
+nye:{t:"New Year's Eve",k:"fixed",sc:"night",go:"Walk. Avoid trams near midnight",s:[["8pm","Picnic spot by the river","Birrarung Marr"],["9:30","Family fireworks (if on)"],["12am","Midnight fireworks"]],e:["Picnic"],n:["See nye.melbourne.vic.gov.au"]},
+depart:{t:"Farewell",k:"arrive",sc:"arrive",go:"PTV app",s:[["Morning","Last river walk","Southbank Promenade"],["Later","Airport"]],e:["Home"],n:[]}
+};
+/* scenes: layered SVG posters */
+const R=(n,f)=>Array.from({length:n},(_,i)=>f(i)).join("");
+const sky=(a,b)=>`<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="1200" height="600" fill="url(#g)"/>`;
+const skyline=(y,c,w)=>R(26,i=>{const h=50+((i*73)%9)*18+(i==12?120:0),x=i*46;return`<rect x="${x}" y="${y-h}" width="${40}" height="${h+200}" fill="${c}"/>${w?R(Math.floor(h/26),j=>`<rect x="${x+8+(j%2)*16}" y="${y-h+10+j*24}" width="8" height="10" fill="${w}" opacity=".7"/>`):""}`});
+const sun=(x,y,r,c)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${c}"/>`;
+const sea=(y,a,b)=>`<rect y="${y}" width="1200" height="${600-y}" fill="${a}"/>`+R(7,i=>`<path d="M${(i*190)%1200} ${y+20+i*18} q30 -10 60 0" stroke="${b}" stroke-width="4" fill="none" opacity=".6"/>`);
+const hills=(y,c,amp,ph)=>`<path d="M0 ${y} ${R(13,i=>`Q${i*100+50} ${y-amp*(((i+ph)%3)+1)} ${i*100+100} ${y}`)} V600 H0Z" fill="${c}"/>`;
+const tree=(x,y,h,c)=>`<rect x="${x-4}" y="${y-h}" width="8" height="${h}" fill="#e9e2d0"/><ellipse cx="${x}" cy="${y-h}" rx="${h*.22}" ry="${h*.16}" fill="${c}"/>`;
+const fern=(x,y,s)=>`<rect x="${x-5}" y="${y-60*s}" width="10" height="${60*s}" fill="#4a3a28"/>`+R(9,i=>{const a=(i/8)*Math.PI;return`<path d="M${x} ${y-60*s} q${Math.cos(a)*60*s} ${-30*s} ${Math.cos(a)*110*s} ${Math.sin(a)*-10*s+30*s}" stroke="#2f6b3a" stroke-width="${7*s}" fill="none"/>`});
+const boxes=y=>R(6,i=>{const c=["#e85d3f","#f2c14e","#2a8fd6","#3d8b4a","#ffffff","#b0577a"][i],x=180+i*150;return`<rect x="${x}" y="${y-70}" width="80" height="70" fill="${c}"/><path d="M${x-6} ${y-70} L${x+40} ${y-110} L${x+86} ${y-70}Z" fill="${c}" opacity=".85"/><rect x="${x+28}" y="${y-48}" width="24" height="48" fill="#0002"/>`});
+const SC={
+city:()=>sky("#ffd6a5","#7aa6d6")+sun(860,210,70,"#fff2c4")+skyline(430,"#2f4e6b","#ffe9a8")+sea(430,"#2b5d7d","#9fd0ea"),
+arrive:()=>sky("#f7a072","#5b5fa8")+sun(300,330,90,"#ffd9a0")+skyline(450,"#3a3466","#ffd28a")+`<path d="M780 140 l140 -30 l20 6 l-60 26 l60 40 l-14 6 l-70 -34 l-60 14z" fill="#fff"/>`+sea(450,"#3b4f8a","#c9b5ff"),
+gardens:()=>sky("#cfeef7","#f4f8e8")+hills(380,"#9cc97a",25,0)+R(7,i=>tree(90+i*170,400+(i%2)*20,120+(i%3)*30,["#3d8b4a","#5aa65a","#2f7a46"][i%3]))+`<ellipse cx="600" cy="520" rx="360" ry="50" fill="#8cc9e3"/>`+`<rect y="470" width="1200" height="130" fill="#7fb860" opacity=".5"/>`,
+beach:()=>sky("#9ed8f5","#e9f7ff")+sun(980,130,60,"#fff3b0")+sea(330,"#2a8fd6","#e9f7ff")+`<path d="M0 420 Q600 380 1200 430 V600 H0Z" fill="#f3dfb3"/>`+boxes(470),
+dusk:()=>sky("#ffb38a","#8a6fd1")+sun(600,330,80,"#ffe0a8")+sea(340,"#4f5aa0","#ffd0b0")+`<rect x="520" y="400" width="680" height="12" fill="#2b2a4a"/>${R(12,i=>`<rect x="${540+i*56}" y="400" width="6" height="60" fill="#2b2a4a"/>`)}`+`<path d="M0 470 Q600 440 1200 480 V600 H0Z" fill="#e9c79a"/>`,
+bay:()=>sky("#bfe3f2","#f7f3e6")+skyline(360,"#8fa9bf")+sea(360,"#3b8fbf","#e3f4fb")+`<path d="M0 470 Q500 430 1200 480 V600 H0Z" fill="#e8d6ae"/><rect x="760" y="330" width="16" height="140" fill="#6b4a2b"/><path d="M768 330 l60 40 h-120z" fill="#fff"/>`,
+river:()=>sky("#d7efe6","#f7f4e8")+hills(300,"#8db88a",40,1)+hills(380,"#5f9c62",30,0)+`<path d="M0 520 Q400 440 700 500 T1200 470 V600 H0Z" fill="#6aa9c9"/>`+`<path d="M640 360 Q800 300 960 360" stroke="#fff" stroke-width="6" fill="none"/>`+R(4,i=>tree(100+i*90,430,150,"#2f6b3a")),
+forest:()=>sky("#d9efe4","#9cc9a8")+hills(300,"#6fa77a",30,2)+R(9,i=>tree(60+i*140,560,300+(i%3)*60,"#3f7d4f"))+fern(250,600,1.4)+fern(900,600,1.6)+fern(600,620,1.1),
+valley:()=>sky("#e4f0dc","#b8dcc4")+hills(280,"#7aa883",50,0)+hills(380,"#4f8a5c",35,2)+`<path d="M0 540 Q300 480 600 520 T1200 500 V600 H0Z" fill="#7fb6cf"/>`+`<rect x="440" y="470" width="320" height="8" fill="#5a4630"/>`+R(9,i=>`<rect x="${450+i*36}" y="430" width="3" height="44" fill="#5a4630"/>`)+fern(150,600,1.3)+fern(1050,600,1.2),
+coast:()=>sky("#a7dcf2","#f1fbff")+sea(300,"#1f7fb8","#ffffff")+`<path d="M1200 220 L860 240 L780 330 L700 600 H1200Z" fill="#c98a52"/><path d="M1200 220 L860 240 L820 270 L1200 260Z" fill="#7fb860"/>`+R(5,i=>`<path d="M${120+i*130} ${520-i*20} q40 -24 80 0" stroke="#fff" stroke-width="6" fill="none"/>`),
+home:()=>sky("#f6e3d3","#efd2bd")+`<clipPath id="w"><rect x="640" y="90" width="420" height="300" rx="10"/></clipPath><rect x="640" y="90" width="420" height="300" rx="10" fill="#9cc8e8"/><g clip-path="url(#w)">${R(10,i=>`<rect x="${650+i*42}" y="${250-((i*53)%5)*22}" width="34" height="200" fill="#5d87a8"/>`)}</g><rect x="640" y="90" width="420" height="300" rx="10" fill="none" stroke="#fff" stroke-width="14"/><rect x="843" y="90" width="14" height="300" fill="#fff"/><rect y="460" width="1200" height="140" fill="#b07a55"/><rect x="230" y="380" width="70" height="80" rx="10" fill="#fff"/><path d="M300 400 q30 0 30 25 q0 25 -30 25" stroke="#fff" stroke-width="8" fill="none"/><path d="M250 360 q-10 -20 5 -40 M275 360 q-10 -20 5 -40" stroke="#fff" stroke-width="5" fill="none" opacity=".8"/>`,
+night:()=>sky("#0d1640","#3a2a6b")+R(5,i=>{const x=180+i*210,y=120+(i%2)*80,c=["#ffd36e","#ff7ab0","#7ae0ff","#b4ff7a","#ff9b6e"][i];return R(16,j=>{const a=j/16*6.283;return`<line x1="${x}" y1="${y}" x2="${x+Math.cos(a)*70}" y2="${y+Math.sin(a)*70}" stroke="${c}" stroke-width="4" stroke-linecap="round"/>`})})+skyline(460,"#141a33","#ffd36e")+sea(460,"#1d2550","#7ae0ff"),
+grad:()=>sky("#ffe1c4","#ff9a7a")+`<path d="M100 600 Q600 180 1100 600Z" fill="#3a4a7a"/><path d="M220 600 Q600 300 980 600Z" fill="#6c7fb8"/>`+R(60,i=>`<rect x="${(i*197)%1200}" y="${(i*131)%420}" width="10" height="16" fill="${["#fff","#f2c14e","#e85d3f","#2a8fd6"][i%4]}" transform="rotate(${i*37} ${(i*197)%1200} ${(i*131)%420})"/>`)+`<path d="M520 230 L600 195 L680 230 L600 265Z" fill="#1d1d2b"/><rect x="575" y="245" width="50" height="30" fill="#1d1d2b"/>`
+};
+const ORDER=["arrive","gardens","city","home","graduation","dandenongs","stkilda","markets","home","warburton","brighton","yarra","home","christmas","work","work","surfcoast","williamstown","home","nye","home","geelong","depart"];
+const FIX={"12-16":"graduation","12-25":"christmas","12-26":"work","12-27":"work","12-31":"nye"};
+const CHECK=[["ok","William Ricketts Sanctuary","Free · train + bus 688 · in the Dandenongs day"],["ok","Warburton & O'Shannassy","Free · train + bus 683 · full day trip"],["ok","Inner Studio","Paid · tram · optional treat"],["no","Moonlit Sanctuary","$37 · rare buses + 2.5 km road walk · swapped for St Kilda penguins"],["no","Noojee Rail Trail","No transit · swapped for the aqueduct trestle at Warburton"],["no","Drummer Rainforest","~450 km away · swapped for Dandenongs fern gullies"]];
+let S={};try{S=JSON.parse(localStorage.getItem("mtrip")||"{}")}catch(e){}
+S.a=S.a||"2026-12-12";S.b=S.b||"2027-01-03";S.plan=S.plan||{};S.add=S.add||{};S.pic=S.pic||{};S.chk=S.chk||{};S.cl=S.cl||{before:[],during:[]};
+const HOME=()=>S.home||"Southbank VIC 3006";
+const save=()=>{try{localStorage.setItem("mtrip",JSON.stringify(S))}catch(e){}};
+const $=id=>document.getElementById(id),esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const q=p=>encodeURIComponent(p==="HOME"?HOME():p+", Victoria, Australia"),mapL=p=>"https://www.google.com/maps/search/?api=1&query="+q(p),dirL=p=>"https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(HOME())+"&destination="+q(p)+"&travelmode=transit",picL=p=>"https://www.google.com/search?tbm=isch&q="+q(p);
+let cur=0;
+function days(){const o=[],a=new Date(S.a+"T12:00"),b=new Date(S.b+"T12:00");if(isNaN(a)||isNaN(b)||b<a)return o;let i=0;for(let d=new Date(a);d<=b&&i<60;d.setDate(d.getDate()+1),i++)o.push(new Date(d));return o}
+const key=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"),md=d=>key(d).slice(5);
+function planFor(d,i,n){const k=key(d);if(S.plan[k])return S.plan[k];if(FIX[md(d)])return FIX[md(d)];if(i===0)return"arrive";if(i===n-1)return"depart";let o=ORDER[i%ORDER.length];if(["graduation","christmas","work","nye","arrive","depart"].includes(o))o=["home","city","gardens","yarra"][i%4];return o}
+function render(){const D=days();
+$("line").innerHTML=D.map((d,i)=>{const p=P[planFor(d,i,D.length)];return`<button class="stop${i===cur?" on":""}" role="tab" aria-selected="${i===cur}" data-i="${i}" title="${esc(p.t)}"><i style="background:${K[p.k][1]}"></i><b>${d.getDate()} ${d.toLocaleDateString("en-AU",{month:"short"})}</b><span>${d.toLocaleDateString("en-AU",{weekday:"short"})}</span></button>`}).join("");
+if(!D.length){$("route").innerHTML="<li>Set your dates.</li>";return}
+cur=Math.min(cur,D.length-1);const d=D[cur],k=key(d),pid=planFor(d,cur,D.length),p=P[pid],pics=S.pic[k]||[];
+$("bg").innerHTML=pics.length?`<img src="${pics[0]}" alt="">`:`<svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${SC[p.sc]()}</svg>`;
+$("sub").innerHTML=`${d.toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"long"})} · <b>${esc(p.t)}</b>`;
+document.body.style.setProperty("--kc",K[p.k][1]);
+const items=p.s.map(x=>({t:x[0],x:x[1],pl:x[2]})).concat((S.add[k]||[]).map((x,j)=>({t:x.t,x:x.x,pl:x.pl,mine:j})));
+$("route").innerHTML=items.map(it=>`<li class="${it.mine!==undefined?"mine":""}"><time>${esc(it.t||"")}</time><span class="pin"></span><div><div class="t">${esc(it.x)}</div>${it.pl?`<div class="links"><a href="${mapL(it.pl)}" target="_blank" rel="noopener">Map</a><a href="${dirL(it.pl)}" target="_blank" rel="noopener">Directions</a><a href="${picL(it.pl)}" target="_blank" rel="noopener">Photos</a></div>`:""}${it.mine!==undefined?`<button class="del" data-del="${it.mine}">remove</button>`:""}</div></li>`).join("");
+$("side").innerHTML=`<div><label for="swap">Plan for this day</label><select id="swap">${Object.entries(P).map(([id,v])=>`<option value="${id}"${id===pid?" selected":""}>${esc(v.t)}</option>`).join("")}</select></div>
+<div><h3>Getting there</h3><p>${esc(p.go)}</p></div><div><h3>Eat</h3><div class="chips">${p.e.map(x=>`<span>${esc(x)}</span>`).join("")}</div></div>
+${p.n.length?`<div><h3>Note</h3>${p.n.map(x=>`<p class="tip">${esc(x)}</p>`).join("")}</div>`:""}`;
+$("photos").innerHTML=pics.map((src,j)=>`<figure><img src="${src}" alt="Photo ${j+1}"><button class="del" data-pdel="${j}" aria-label="Remove photo">✕</button></figure>`).join("");
+$("acts").innerHTML=`<button class="ghost" id="copy">Copy day for WhatsApp</button>${S.plan[k]?'<button class="ghost" id="undo">Undo swap</button>':""}`;}
+$("d1").value=S.a;$("d2").value=S.b;
+$("d1").onchange=e=>{S.a=e.target.value;save();render()};$("d2").onchange=e=>{S.b=e.target.value;save();render()};
+$("reset").onclick=()=>{S.plan={};save();render()};
+$("line").onclick=e=>{const b=e.target.closest(".stop");if(b){cur=+b.dataset.i;render()}};
+document.addEventListener("change",e=>{const D=days();if(!D.length)return;const k=key(D[cur]);
+ if(e.target.id==="swap"){S.plan[k]=e.target.value;save();render()}
+ if(e.target.id==="pf"){[...e.target.files].forEach(f=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement("canvas"),s=Math.min(1,1000/Math.max(im.width,im.height));c.width=im.width*s;c.height=im.height*s;c.getContext("2d").drawImage(im,0,0,c.width,c.height);(S.pic[k]=S.pic[k]||[]).push(c.toDataURL("image/jpeg",.72));save();render()};im.src=r.result};r.readAsDataURL(f)});e.target.value=""}});
+$("addf").addEventListener("submit",e=>{e.preventDefault();const k=key(days()[cur]);(S.add[k]=S.add[k]||[]).push({t:$("at").value,x:$("ax").value,pl:$("ap").value});$("addf").reset();save();render()});
+document.addEventListener("click",e=>{const D=days();if(!D.length)return;const k=key(D[cur]),t=e.target;
+ if(t.dataset.del!==undefined){S.add[k].splice(+t.dataset.del,1);save();render()}
+ if(t.dataset.pdel!==undefined){S.pic[k].splice(+t.dataset.pdel,1);save();render()}
+ if(t.id==="undo"){delete S.plan[k];save();render()}
+ if(t.id==="copy"){const p=P[planFor(D[cur],cur,D.length)],txt="Naarm Visit · "+D[cur].toDateString()+" · "+p.t+"\n"+p.go+"\n"+p.s.concat((S.add[k]||[]).map(a=>[a.t,a.x,a.pl])).map(x=>"• "+(x[0]?x[0]+" ":"")+x[1]+(x[2]?" "+mapL(x[2]):"")).join("\n");
+  try{navigator.clipboard.writeText(txt).then(()=>{t.textContent="Copied ✓"},()=>{t.textContent="Copy blocked"})}catch(err){t.textContent="Copy blocked"}}});
+function renderCk(){let n=0,d=0;$("ck").innerHTML=Object.keys(LISTS).map(L=>`<div><h3>${LN[L]}</h3><ul>${LISTS[L].concat(S.cl[L]).map((t,i)=>{const id=L+":"+t,on=!!S.chk[id];n++;if(on)d++;return`<li class="${on?"done":""}"><label><input type="checkbox" data-ck="${esc(id)}"${on?" checked":""}><span>${esc(t)}</span></label></li>`}).join("")}</ul><form data-cl="${L}"><input placeholder="Add item" aria-label="Add item to ${LN[L]}"><button type="submit">Add</button></form></div>`).join("");$("prog").textContent=d+" of "+n+" done"}
+$("ck").addEventListener("change",e=>{const id=e.target.dataset.ck;if(id){S.chk[id]=e.target.checked;save();renderCk()}});
+$("ck").addEventListener("submit",e=>{e.preventDefault();const L=e.target.dataset.cl,v=e.target.querySelector("input").value.trim();if(v){S.cl[L].push(v);save();renderCk()}});
+$("hm").value=S.home||"";$("hm").onchange=e=>{S.home=e.target.value.trim();save();render()};
+renderCk();
+try{if("serviceWorker" in navigator&&/github\.io$/.test(location.hostname))navigator.serviceWorker.register("sw.js")}catch(e){}
+$("check").innerHTML=CHECK.map(r=>`<li><span class="${r[0]}">${r[0]=="ok"?"✓":"✕"}</span><span><b>${r[1]}</b><br><span class="note">${r[2]}</span></span></li>`).join("");
+render();
+}
+</script>
+</body>
+</html>

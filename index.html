@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Naarm Visit</title>
+<meta name="theme-color" content="#8c3f2b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Naarm Visit">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: calm, warm, uncluttered — a keepsake travel app for parents
+   IDEA: hand-printed travel stamps — each day a muted card with one white line-drawn emblem
+   PICTURE: centred card slider on home (neighbours blurred), full-bleed emblem hero per day
+   COLOUR and TYPE: muted earth tones per place on paper grain; white line art; Outfit + Figtree
+   LAYOUT: home = title, slider, counter · day = hero + sheet with stat tiles, route · burger drawer for extras */
+:root{color-scheme:light dark;--bg:light-dark(#f4efe6,#1a1816);--ink:light-dark(#2b2622,#efe9df);--mut:light-dark(#7a7068,#a79d92);
+--line:light-dark(#e2d9cb,#34302b);--card:light-dark(#fbf8f2,#24211e);--acc:#8c3f2b;--soft:light-dark(#ebe3d6,#2a2622)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Figtree,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:Outfit,system-ui,sans-serif;line-height:1.05;margin:0;text-wrap:balance}
+a{color:inherit}
+button,input,select{font:inherit;font-size:16px}
+button{cursor:pointer}
+:focus-visible{outline:3px solid #d9a066;outline-offset:2px}
+.wrap{max-width:720px;margin:0 auto;padding:0 22px}
+.grain{position:relative;isolation:isolate}
+.grain::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.55;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E")}
+.glass{background:#ffffff26;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid #ffffff40;color:#fff}
+.ib{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;padding:0;font-size:20px}
+.ib:disabled{opacity:.35;cursor:default}
+.ib svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+/* top bar */
+.top{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 0;max-width:720px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:10px;font-family:Outfit,system-ui,sans-serif;font-weight:500;font-size:17px}
+.brand i{width:36px;height:36px;border-radius:11px;background:var(--acc);display:grid;place-items:center}
+.brand i svg{width:30px;height:30px}
+.top .ib{background:var(--soft);border:0;color:var(--ink)}
+/* home */
+.intro{padding-top:clamp(28px,6vh,56px);padding-bottom:22px}
+.eyebrow{margin:0;color:var(--mut);font-size:15px}
+.intro h1{font-size:clamp(44px,11vw,72px);font-weight:700;letter-spacing:-.025em;margin-top:4px}
+.count{display:inline-block;margin-top:14px;background:var(--soft);border-radius:999px;padding:6px 14px;font-size:14px}
+.slider{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px calc(50vw - min(32vw,150px)) 26px;scrollbar-width:none}
+.slider::-webkit-scrollbar{display:none}
+.card{flex:0 0 min(64vw,300px);aspect-ratio:3/4.15;border-radius:30px;overflow:hidden;scroll-snap-align:center;border:0;padding:0;color:#fff;text-align:left;
+transform:scale(.88);filter:blur(4px) saturate(.7);opacity:.65}
+.card.on{transform:none;filter:none;opacity:1;box-shadow:0 22px 44px -18px #0007}
+.card .art{position:absolute;left:50%;top:44%;width:58%;transform:translate(-50%,-50%);z-index:1}
+.card .ph,.hero .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.card .shade,.hero .shade{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,#0000 45%,#0006)}
+.card .chip{position:absolute;top:16px;left:16px;z-index:2;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600}
+.card .meta{position:absolute;left:20px;right:20px;bottom:20px;z-index:2;display:flex;align-items:end;justify-content:space-between;gap:10px}
+.card h2{font-size:24px;font-weight:500}
+.card small{display:block;opacity:.85;font-size:13px;margin-top:4px}
+.card .go{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:20px}
+.pager{display:flex;align-items:center;justify-content:center;gap:18px;color:var(--mut);font-size:14px}
+.pager button{background:var(--soft);border:0;color:var(--ink)}
+.foot{text-align:center;padding:30px 22px 90px;font-size:14px;color:var(--mut)}
+.foot a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px solid var(--line)}
+/* day */
+.hero{height:clamp(340px,56vh,520px);color:#fff;overflow:hidden}
+.hero .art{position:absolute;left:50%;top:42%;width:min(52vw,250px);transform:translate(-50%,-50%);z-index:1}
+.hero .bar{position:absolute;top:16px;left:16px;right:16px;display:flex;justify-content:space-between;z-index:3}
+.hero .ttl{position:absolute;left:22px;right:22px;bottom:46px;z-index:3;display:flex;justify-content:space-between;align-items:end;gap:12px}
+.hero .ttl p{margin:0 0 6px;font-size:15px;opacity:.9}
+.hero h1{font-size:clamp(32px,8vw,48px);font-weight:500;letter-spacing:-.015em}
+.hero .arrows{display:flex;gap:8px}
+.sheet{position:relative;z-index:4;margin-top:-26px;background:var(--bg);border-radius:28px 28px 0 0;padding-top:26px;padding-bottom:90px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.stats div{border:1px solid var(--line);border-radius:18px;padding:10px 12px;text-align:center}
+.stats b{display:block;font-family:Outfit,system-ui,sans-serif;font-weight:500;font-size:19px}
+.stats span{font-size:12.5px;color:var(--mut)}
+.go-line{margin:18px 0 6px;color:var(--mut);font-size:15px}
+.route{list-style:none;margin:18px 0 0;padding:0}
+.route li{display:grid;grid-template-columns:76px 14px minmax(0,1fr);gap:12px;padding-bottom:22px;position:relative}
+.route li::after{content:"";position:absolute;left:94px;top:22px;bottom:2px;width:2px;background:var(--line)}
+.route li:last-child::after{display:none}
+.route time{font-family:Outfit,system-ui,sans-serif;font-weight:500;font-size:14px;color:var(--mut);text-align:right;white-space:nowrap;padding-top:2px}
+.route .pin{width:14px;height:14px;border-radius:50%;border:3px solid var(--kc);margin-top:6px;background:var(--bg)}
+.route .t{font-size:17.5px}
+.links{display:flex;flex-wrap:wrap;gap:2px 14px;font-size:13.5px;color:var(--mut)}
+.links a{color:var(--mut);text-decoration:none;border-bottom:1px solid var(--line)}
+.row1{display:flex;justify-content:space-between;gap:10px;align-items:start}
+.x{background:none;border:0;color:var(--mut);opacity:.6;padding:2px 2px 6px 8px;font-size:15px;line-height:1;min-height:28px}
+.del{background:none;border:0;padding:0;color:var(--mut);font-size:13px;text-decoration:underline}
+.mine .pin{border-color:#d9a066}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chips span{background:var(--soft);border-radius:999px;padding:5px 12px;font-size:14px}
+.blk{margin-top:26px}.blk h3{font:600 13px Figtree,system-ui,sans-serif;color:var(--mut);margin-bottom:8px}
+.tip{margin:6px 0;padding-left:12px;border-left:2px solid var(--kc);font-size:15px}
+details.fold{border-top:1px solid var(--line);padding:14px 0}
+details.fold summary{cursor:pointer;font-family:Outfit,system-ui,sans-serif;font-weight:500;font-size:18px;min-height:30px;list-style:none;display:flex;justify-content:space-between}
+details.fold summary::after{content:"+";color:var(--mut)}details.fold[open] summary::after{content:"–"}
+details.fold summary::-webkit-details-marker{display:none}
+details.fold[open] summary{margin-bottom:12px}
+input,select{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);min-height:44px}
+.btn{min-height:44px;padding:8px 18px;border-radius:999px;border:0;background:var(--ink);color:var(--bg);font-weight:600}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.addf{display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px}.addf .full{grid-column:1/-1}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:10px}
+.photos figure{margin:0;position:relative}.photos img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:14px;display:block}
+.photos .del{position:absolute;top:4px;right:4px;background:#000a;color:#fff;border-radius:8px;padding:2px 7px;text-decoration:none}
+.note{font-size:13px;color:var(--mut)}
+/* drawer */
+.scrim{position:fixed;inset:0;background:#0006;z-index:20}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,92vw);background:var(--bg);z-index:21;overflow-y:auto;padding:18px 22px 40px;transform:translateX(105%);visibility:hidden}
+.drawer.open{transform:none;visibility:visible}
+.drawer header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.drawer header h2{font-size:24px;font-weight:500}
+.drawer header .ib{background:var(--soft);border:0;color:var(--ink)}
+.prog{font:400 13px Figtree,system-ui,sans-serif;color:var(--mut);margin-left:auto;margin-right:10px;align-self:center}
+.ck h4{font:600 13px Figtree,system-ui,sans-serif;color:var(--mut);margin:10px 0 4px}
+.ck ul,.list{list-style:none;padding:0;margin:0}
+.ck label{display:flex;gap:12px;align-items:center;min-height:40px;font-size:15.5px;cursor:pointer}
+.ck input[type=checkbox]{width:20px;height:20px;min-height:0;accent-color:var(--acc);flex:none}
+.ck li.done span{text-decoration:line-through;color:var(--mut)}
+.ck form{display:flex;gap:8px;margin:4px 0 8px}.ck form .btn{padding:8px 14px}
+.list li{padding:8px 0;border-bottom:1px solid var(--line);font-size:15px}.list li:last-child{border:0}
+.set{display:grid;gap:12px}.set label{font-size:13px;font-weight:600;color:var(--mut)}
+.ok{color:#5f7f52;font-weight:600}.no{color:var(--acc);font-weight:600}
+.ig{display:flex;align-items:center;gap:10px;margin-top:22px;padding:14px 16px;border-radius:18px;background:var(--acc);color:#fff;text-decoration:none;font-weight:600}
+.undo{position:fixed;right:18px;bottom:18px;z-index:10;background:var(--ink);color:var(--bg);border:0;box-shadow:0 8px 24px #0004}
+[hidden]{display:none!important}
+@media(prefers-reduced-motion:no-preference){.card{transition:transform .35s,filter .35s,opacity .35s}.drawer{transition:transform .3s,visibility .3s}.hero .art{animation:rise .6s ease}@keyframes rise{from{opacity:0;transform:translate(-50%,-44%)}}}
+@media(max-width:400px){.route li{grid-template-columns:72px 14px minmax(0,1fr);gap:10px}.route li::after{left:88px}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+<symbol id="i-next" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 7L4 12l5 5M4 12h10a6 6 0 010 12"/></symbol>
+</defs></svg>
+
+<div id="home">
+ <div class="top"><div class="brand"><i id="mark"></i>Naarm Visit</div><button class="ib menu" aria-label="Open menu"><svg><use href="#i-menu"/></svg></button></div>
+ <section class="intro wrap"><p class="eyebrow" id="range"></p><h1>Naarm Visit</h1><span class="count" id="count"></span></section>
+ <div class="slider" id="slider" aria-label="Trip days"></div>
+ <div class="pager"><button class="ib" id="pv" aria-label="Previous day"><svg><use href="#i-back"/></svg></button><span id="pos"></span><button class="ib" id="nx" aria-label="Next day"><svg><use href="#i-next"/></svg></button></div>
+ <p class="foot">Follow along <a class="iglink" target="_blank" rel="noopener"></a></p>
+</div>
+
+<div id="dayv" hidden>
+ <header class="hero grain" id="hero"></header>
+ <section class="sheet"><div class="wrap" id="sheet"></div></section>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" aria-label="Menu">
+ <header><h2>Essentials</h2><button class="ib" id="close" aria-label="Close menu"><svg><use href="#i-x"/></svg></button></header>
+ <details class="fold" open><summary>Checklist <span class="prog" id="prog"></span></summary><div class="ck" id="ck"></div></details>
+ <details class="fold"><summary>Fares &amp; tips</summary><ul class="list">
+  <li>Half-price fares until 1 Jan 2027: max <b>$5.70/day</b> per person, regional trains included. Higher from January.</li>
+  <li>One myki each. CBD trams are free.</li>
+  <li>Over 32°C or Total Fire Ban? Swap hikes for beach or NGV.</li>
+  <li>Crossways, 147 Swanston St: vegetarian, about $10.</li>
+  <li>Check the PTV app the night before.</li></ul></details>
+ <details class="fold"><summary>Your list: what's doable</summary><ul class="list" id="check"></ul></details>
+ <details class="fold"><summary>Settings</summary><div class="set">
+  <div><label for="d1">Arrive</label><input type="date" id="d1"></div>
+  <div><label for="d2">Leave</label><input type="date" id="d2"></div>
+  <div><label for="hm">Home address (this phone only)</label><input id="hm" placeholder="Street, suburb"></div>
+  <div><label for="igi">Instagram handle</label><input id="igi"></div>
+  <button class="btn ghost" id="reset">Reset all day plans</button></div></details>
+ <a class="ig iglink" target="_blank" rel="noopener"></a>
+</aside>
+<button class="ib undo" id="undoBtn" aria-label="Undo last change" title="Undo" hidden><svg><use href="#i-undo"/></svg></button>
+
+<script>
+{
+const LISTS={before:["Visas approved & passports valid","Travel insurance with health cover","Graduation guest tickets confirmed","Medicines in original packs + prescriptions","Declare all food at customs","Type I plug adapters","Phone plan: eSIM or roaming","Walking shoes, hat, sunglasses, swimwear","Warm layer + rain jacket","Spare bedding & towels ready","Stock masala, chai, groceries","PTV app + offline Google Maps","Emergency card: address, your number, 000"],during:["Buy a myki each & top up","Water bottles + picnic mat + cooler bag","Sunscreen SPF 50 every outing","Check weather & fire ban each morning","Check PTV times the night before","Charge phones + power bank","Graduation outfits ironed","Agree a NYE meeting point","Souvenirs within customs limits"]};
+const LN={before:"Before they arrive",during:"During the visit"};
+const K={arrive:["Arrival","#8a6fd1"],city:["City","#006d77"],beach:["Beach","#2a8fd6"],hike:["Nature","#3d8b4a"],regional:["Day trip","#c27a12"],home:["Home","#b0577a"],fixed:["Big day","#e85d3f"],work:["Work","#8a9799"]};
+const P={
+arrive:{t:"Arrival",k:"arrive",sc:"arrive",go:"Flight times in Melbourne time · pickup at T2",s:[["4:40am","SQ 523 Hyderabad → Singapore (11:10pm Sun, India time)"],["9:15am","Singapore layover · change terminals"],["2:00pm","SQ 217 Singapore → Melbourne"],["9:25pm","Land Melbourne T2 · pickup","Melbourne Airport Terminal 2"],["11pm","Home & sleep","HOME"]],e:["Light dinner ready at home"],n:["Keep tomorrow empty for jet lag."]},
+city:{t:"City lanes & lights",k:"city",sc:"city",go:"Walk 15 min · free trams",s:[["10am","Fed Square","Federation Square Melbourne"],["10:45","Hosier Lane & Degraves St","Hosier Lane Melbourne"],["12pm","Lunch at Crossways","Crossways 147 Swanston St Melbourne"],["1:15","State Library dome","State Library Victoria"],["7:30pm","Myer Christmas windows","Myer Melbourne Bourke Street"],["8:30","Fed Square tree","Federation Square Melbourne"]],e:["Crossways","Chinatown"],n:["Tree lit until 25 Dec."]},
+gardens:{t:"Gardens & Shrine",k:"city",sc:"gardens",go:"Walk 20 min",s:[["9:30am","Shrine balcony view","Shrine of Remembrance"],["10:30","Botanic Gardens","Royal Botanic Gardens Melbourne"],["12:30pm","Picnic by the lake","Royal Botanic Gardens Melbourne Ornamental Lake"],["2pm","NGV (free)","NGV International"]],e:["Picnic"],n:["NGV is air-conditioned, so it's good on a hot day."]},
+stkilda:{t:"St Kilda & penguins",k:"beach",sc:"dusk",go:"Tram 12 from Clarendon St · 25 min",s:[["2pm","Esplanade & swim","St Kilda Beach"],["4:30","Acland St","Acland Street St Kilda"],["6:30","Beach picnic","St Kilda Foreshore"],["8:30pm","Penguins on the pier","St Kilda Pier"]],e:["Picnic","Fish & chips"],n:["Penguins arrive after sunset. No flash."]},
+brighton:{t:"Brighton bathing boxes",k:"beach",sc:"beach",go:"Sandringham line · 25 min",s:[["9:30am","Train to Brighton Beach","Brighton Beach Station"],["10:15","Bathing boxes","Brighton Bathing Boxes"],["11am","Swim & picnic","Brighton Beach Victoria"],["1:30pm","Bay trail to Middle Brighton","Middle Brighton Pier"]],e:["Picnic"],n:["Little shade. Go early."]},
+williamstown:{t:"Williamstown",k:"beach",sc:"bay",go:"Williamstown line · 30 min",s:[["10am","Gem Pier & Nelson Place","Gem Pier Williamstown"],["11:30","Skyline at Point Gellibrand","Point Gellibrand Heritage Park"],["1pm","Picnic","Commonwealth Reserve Williamstown"],["2:30","Williamstown Beach","Williamstown Beach"]],e:["Picnic","Fish & chips"],n:["Take the train. The ferry is paid."]},
+yarra:{t:"Yarra Bend gorge",k:"hike",sc:"river",go:"Train to Victoria Park · 10 min",s:[["10am","Dights Falls","Dights Falls"],["10:45","River trail, 3 km","Studley Park Boathouse"],["12:15pm","Picnic at Kanes Bridge","Kanes Bridge Yarra Bend"],["1:30","Abbotsford Convent","Abbotsford Convent"]],e:["Picnic"],n:["Gentle. Good for jet-lag week."]},
+markets:{t:"Market & Carlton",k:"city",sc:"city",go:"Free tram",s:[["9am","Queen Vic Market","Queen Victoria Market"],["11:30","Carlton Gardens","Carlton Gardens"],["2pm","Lygon St & uni quad","University of Melbourne Old Quad"]],e:["Market food","Lygon gelato"],n:["Market is closed Mon & Wed."]},
+dandenongs:{t:"Dandenong Ranges",k:"hike",sc:"forest",go:"Belgrave line 60 min + bus 688",s:[["8:15am","Train to Upper Ferntree Gully","Upper Ferntree Gully Station"],["9:45","1000 Steps / Lyrebird Track","1000 Steps Kokoda Track Memorial Walk"],["12:30pm","Bus 688","William Ricketts Sanctuary"],["1:15","William Ricketts Sanctuary","William Ricketts Sanctuary"],["3pm","Olinda village","Olinda Victoria"]],e:["Picnic","Olinda bakeries"],n:["688 is roughly hourly. Screenshot the timetable.","Closed on fire-ban days."]},
+warburton:{t:"Warburton & the Aqueduct",k:"regional",sc:"valley",go:"Lilydale line + bus 683 · 2 hrs",s:[["7:45am","Train to Lilydale","Lilydale Station"],["10am","Yarra River walk","Warburton Swing Bridge"],["12pm","Riverside picnic","Warburton Victoria"],["1:30","O'Shannassy Aqueduct","O'Shannassy Aqueduct Trail"],["4:45","Bus back","Warburton Victoria"]],e:["Picnic","Main St cafés"],n:["Steep 800 m climb to the aqueduct. The river walk is fine on its own."]},
+surfcoast:{t:"Torquay cliffs",k:"regional",sc:"coast",go:"V/Line to Geelong + bus 53",s:[["8am","V/Line to Geelong","Southern Cross Station"],["10:15","Torquay Front Beach","Torquay Front Beach"],["1pm","Clifftop walk to Jan Juc","Point Danger Torquay"],["4pm","Bus 52, then train home","Jan Juc Beach"]],e:["Picnic","Fish & chips"],n:["Swim between the flags."]},
+geelong:{t:"Geelong waterfront",k:"regional",sc:"bay",go:"V/Line · 60 min",s:[["11am","Waterfront bollards","Geelong Waterfront"],["12:30pm","Eastern Beach swim","Eastern Beach Geelong"],["2pm","Botanic Gardens","Geelong Botanic Gardens"]],e:["Picnic"],n:["Flat and slow."]},
+home:{t:"Home day",k:"home",sc:"home",go:"Nowhere",s:[["9am","Balcony chai"],["11am","Cook together"],["4pm","Games & photo album"],["8pm","Movie night"]],e:["Home cooking"],n:["Optional treat: Inner Studio sauna, South Yarra (paid)."]},
+graduation:{t:"Graduation day",k:"fixed",sc:"grad",go:"Walk 20 min to Docklands",s:[["Ceremony","Marvel Stadium","Marvel Stadium"],["After","Harbour photos","Docklands Victoria Harbour"],["Afternoon","RMIT & State Library photos","RMIT University City Campus"],["Evening","Celebration dinner","Lygon Street Carlton"]],e:["Your pick"],n:["Confirm guest tickets."]},
+christmas:{t:"Christmas Day",k:"fixed",sc:"gardens",go:"Reduced services",s:[["Morning","Slow breakfast"],["12pm","Picnic in the Gardens","Royal Botanic Gardens Melbourne"],["Evening","River lights walk","Southbank Promenade"]],e:["Picnic hamper"],n:["Most places closed."]},
+work:{t:"Parents' easy day",k:"work",sc:"city",go:"Walking only",s:[["10am","NGV & Arts Centre","NGV International"],["3pm","Southbank stroll","Southbank Promenade"],["Evening","Dinner together"]],e:["Home"],n:["Teesta at work."]},
+nye:{t:"New Year's Eve",k:"fixed",sc:"night",go:"Walk. Avoid trams near midnight",s:[["8pm","Picnic spot by the river","Birrarung Marr"],["9:30","Family fireworks (if on)"],["12am","Midnight fireworks"]],e:["Picnic"],n:["See nye.melbourne.vic.gov.au"]},
+depart:{t:"Departure",k:"arrive",sc:"arrive",go:"SkyBus from Southern Cross (paid) is easiest with bags",s:[["8:30am","Last river walk","Southbank Promenade"],["10:15am","Leave for the airport","Melbourne Airport Terminal 2"],["1:25pm","SQ 8531 Melbourne → Singapore"],["9:20pm","Singapore layover"],["5:25am","Singapore → New Delhi (Tue)"],["11:10am","Land New Delhi (Tue, Melbourne time)"]],e:["Breakfast at home"],n:["Be at T2 about 3 hours before departure.","Times in Melbourne time: landing is about 5:40am in Delhi."]}
+};
+const ORDER=["arrive","home","graduation","gardens","dandenongs","markets","home","warburton","stkilda","city","brighton","christmas","work","work","surfcoast","yarra","williamstown","nye","home","geelong","home","depart"];
+const FIX={"12-16":"graduation","12-25":"christmas","12-26":"work","12-27":"work","12-31":"nye"};
+const CHECK=[["ok","William Ricketts Sanctuary","Free · train + bus 688 · in the Dandenongs day"],["ok","Warburton & O'Shannassy","Free · train + bus 683 · full day trip"],["ok","Inner Studio","Paid · tram · optional treat"],["no","Moonlit Sanctuary","$37 · rare buses + 2.5 km road walk · swapped for St Kilda penguins"],["no","Noojee Rail Trail","No transit · swapped for the aqueduct trestle at Warburton"],["no","Drummer Rainforest","~450 km away · swapped for Dandenongs fern gullies"]];
+let S={};try{S=JSON.parse(localStorage.getItem("mtrip")||"{}")}catch(e){}
+if(S.v!==2){S.a="2026-12-14";S.b="2027-01-04";S.plan={};S.v=2}S.plan=S.plan||{};S.add=S.add||{};S.pic=S.pic||{};S.chk=S.chk||{};S.cl=S.cl||{before:[],during:[]};
+S.ig=S.ig||"ohlyans_at_naarm";S.h=S.h||[];S.hide=S.hide||{};
+const HOME=()=>S.home||"Southbank VIC 3006";
+const save=()=>{try{localStorage.setItem("mtrip",JSON.stringify(S))}catch(e){}};
+const $=id=>document.getElementById(id),esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const q=p=>encodeURIComponent(p==="HOME"?HOME():p+", Victoria, Australia"),mapL=p=>"https://www.google.com/maps/search/?api=1&query="+q(p),dirL=p=>"https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(HOME())+"&destination="+q(p)+"&travelmode=transit",picL=p=>"https://www.google.com/search?tbm=isch&q="+q(p);
+function days(){const o=[],a=new Date(S.a+"T12:00"),b=new Date(S.b+"T12:00");if(isNaN(a)||isNaN(b)||b<a)return o;let i=0;for(let d=new Date(a);d<=b&&i<60;d.setDate(d.getDate()+1),i++)o.push(new Date(d));return o}
+const key=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"),md=d=>key(d).slice(5);
+function planFor(d,i,n){const k=key(d);if(S.plan[k])return S.plan[k];if(FIX[md(d)])return FIX[md(d)];if(i===0)return"arrive";if(i===n-1)return"depart";let o=ORDER[i%ORDER.length];if(["graduation","christmas","work","nye","arrive","depart"].includes(o)&&!FIX[md(d)])o=["home","city","gardens","yarra"][i%4];return o}
+
+/* line-art emblems */
+const sp=(x,y,r)=>`<path d="M${x} ${y-r}Q${x} ${y} ${x+r} ${y}Q${x} ${y} ${x} ${y+r}Q${x} ${y} ${x-r} ${y}Q${x} ${y} ${x} ${y-r}Z" fill="#fff" stroke="none"/>`;
+const dot=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" stroke="none"/>`;
+const wv=(y,x,n)=>`<path d="M${x} ${y}${" q10 -6 20 0".repeat(n)}"/>`;
+const RR=(n,f)=>Array.from({length:n},(_,i)=>f(i)).join("");
+const rays=(cx,cy,n,r1,r2,a0,a1)=>RR(n,i=>{const a=(a0+(a1-a0)*i/(n-1))*Math.PI/180;return`<path d="M${(cx+Math.cos(a)*r1).toFixed(1)} ${(cy+Math.sin(a)*r1).toFixed(1)}L${(cx+Math.cos(a)*r2).toFixed(1)} ${(cy+Math.sin(a)*r2).toFixed(1)}"/>`});
+const IC={
+logo:`<path d="M66 116A34 34 0 0 1 134 116"/>${rays(100,116,7,46,62,198,342)}<path d="M44 128H156M70 142H130"/>${wv(158,60,4)}`,
+plane:`<g transform="rotate(-24 110 96)"><path d="M52 100Q52 94 60 94H146Q164 94 170 100Q164 106 146 106H60Q52 106 52 100Z"/><path d="M116 94L96 58H106L138 94M116 106L96 142H106L138 106M68 94L58 78H64L82 94M68 106L58 122H64L82 106"/></g><path d="M34 160Q44 140 62 128" stroke-dasharray="1 9"/>${sp(48,52,8)}${dot(160,150,3)}${wv(172,60,4)}`,
+city:`<path d="M38 140V112H54V96H70V118H82V72L90 50L98 72V118H110V86H126V104H140V92H156V140"/><path d="M30 140H170"/>${wv(156,50,5)}<path d="M72 170H128"/>${sp(150,58,7)}`,
+tree:`<circle cx="100" cy="82" r="36"/><path d="M100 118V150M100 134L86 120M100 128L114 114"/><path d="M50 150H150M70 164H130M86 176H114"/>${dot(150,52,3)}${dot(160,66,2)}`,
+penguin:`<path d="M100 58C82 58 74 78 74 100C74 126 84 146 100 146C116 146 126 126 126 100C126 78 118 58 100 58Z"/><path d="M100 72C92 76 88 90 88 104C88 124 94 136 100 140"/>${dot(94,76,2.5)}<path d="M80 82L70 86L80 90M78 108Q68 120 72 134M92 146L86 154M108 146L114 154"/><path d="M150 44A16 16 0 1 0 166 70A12 12 0 1 1 150 44Z"/>${wv(170,50,5)}`,
+box:`<path d="M72 148V94L100 66L128 94V148Z"/><path d="M92 148V116H108V148"/><path d="M81 100V140M119 100V140" stroke-dasharray="2 7"/><circle cx="152" cy="58" r="10"/><path d="M152 40V34M152 76V82M134 58H128M170 58H176"/>${wv(164,40,6)}`,
+lighthouse:`<path d="M86 150L93 72H107L114 150Z"/><path d="M89 72H111M94 72V58H106V72M100 58V48M90 100H110M88 126H112"/><path d="M84 56L58 46M84 64L58 72M116 56L142 46M116 64L142 72" stroke-dasharray="1 7"/>${wv(164,40,6)}`,
+bridge:`<path d="M60 136V78M140 136V78M28 118H172"/><path d="M28 110Q48 80 60 78Q100 122 140 78Q152 80 172 110"/><path d="M80 98V118M100 106V118M120 98V118"/>${wv(150,40,6)}<path d="M72 166H128"/>`,
+basket:`<path d="M58 104H142L130 152H70Z"/><path d="M78 104Q100 50 122 104"/><circle cx="86" cy="94" r="9"/><circle cx="114" cy="94" r="9"/><path d="M100 92Q100 80 104 74Q114 72 116 80Q106 82 104 74M64 122H136M68 138H132"/>${sp(152,54,7)}`,
+fern:`<path d="M100 158V86C100 62 132 58 132 80C132 94 114 96 114 86C114 79 122 79 122 84"/>${RR(6,i=>{const y=148-i*11,l=28-i*3.4;return`<path d="M100 ${y}q-${(l*.5).toFixed(1)} -3 -${l.toFixed(1)} -${(l*.55).toFixed(1)}M100 ${y}q${(l*.5).toFixed(1)} -3 ${l.toFixed(1)} -${(l*.55).toFixed(1)}"/>`})}${sp(56,60,7)}${dot(150,140,3)}`,
+aqueduct:`<path d="M26 86Q60 56 92 74T170 64"/><path d="M34 108H166M34 116H166M30 152H170"/>${RR(5,i=>{const x=40+i*28;return`<path d="M${x} 116L${x+20} 152M${x+20} 116L${x} 152"/>`})}${sp(150,40,7)}`,
+wave:`<path d="M34 150C40 104 86 70 128 78C158 84 162 118 138 122C120 125 114 104 130 100"/><path d="M34 150H170M60 162H150M86 174H124"/>${dot(150,48,3)}${sp(168,62,7)}`,
+pier:`<path d="M70 118A30 30 0 0 1 130 118"/>${rays(100,118,5,40,52,210,330)}<path d="M40 118H160M106 134H172M118 134V152M138 134V152M158 134V152"/>${wv(160,34,3)}`,
+chai:`<path d="M68 98H132V122Q132 148 100 148Q68 148 68 122Z"/><path d="M132 106Q150 106 150 118Q150 130 132 130M56 156H144"/><path d="M88 86Q80 74 88 62Q96 50 88 40M112 86Q104 74 112 62Q120 50 112 40"/>${sp(152,52,7)}`,
+cap:`<path d="M100 58L162 86L100 114L38 86Z"/><path d="M68 100V128Q100 146 132 128V100M150 92V126M146 136L150 126L154 136"/>${sp(50,50,8)}${sp(158,46,5)}${dot(40,126,3)}`,
+xmas:`<path d="M100 54L70 102H86L60 144H140L114 102H130Z"/><path d="M94 144V158H106V144"/>${sp(100,38,10)}${dot(86,126,3)}${dot(114,120,3)}${dot(100,98,3)}`,
+frame:`<rect x="58" y="62" width="84" height="84"/><rect x="70" y="74" width="60" height="60"/><path d="M78 122Q90 92 102 110T124 88M86 62L100 48L114 62"/>${sp(158,142,7)}`,
+burst:`${rays(100,80,14,14,46,0,334.3)}<circle cx="100" cy="80" r="5"/>${sp(46,48,7)}${sp(160,140,5)}${dot(150,40,3)}${wv(160,50,5)}`
+};
+const LOOK={arrive:["plane","#8c5a4a"],depart:["plane","#7d5a52"],city:["city","#4f6475"],gardens:["tree","#6f7f62"],stkilda:["penguin","#665a78"],brighton:["box","#a8735a"],williamstown:["lighthouse","#55707f"],yarra:["bridge","#5d7363"],markets:["basket","#a0763f"],dandenongs:["fern","#4c6650"],warburton:["aqueduct","#69735a"],surfcoast:["wave","#3f6b78"],geelong:["pier","#9a6a50"],home:["chai","#9e665b"],graduation:["cap","#8c3f2b"],christmas:["xmas","#7a4a3f"],work:["frame","#6b6560"],nye:["burst","#30344a"]};
+const art=(id,cls="art")=>`<svg class="${cls}" viewBox="0 0 200 200" aria-hidden="true"><g fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">${IC[id]}</g></svg>`;
+const look=pid=>LOOK[pid]||["logo","#8c3f2b"];
+
+S.h=S.h||[];S.hide=S.hide||{};
+const SK=["a","b","plan","add","chk","cl","ig","hide"],shared=()=>{const o={};SK.forEach(k=>o[k]=S[k]);return o};
+function commit(fn){const prev=JSON.stringify(shared());fn();S.h=S.h.concat([prev]).slice(-15);save();refresh()}
+function undo(){if(!S.h.length)return;Object.assign(S,JSON.parse(S.h.pop()));save();refresh()}
+const fmt=(d,o)=>d.toLocaleDateString("en-AU",o);
+let cur=0,view="home";
+
+function renderHome(){const D=days();
+ $("range").textContent=D.length?`${fmt(D[0],{day:"numeric",month:"short"})} – ${fmt(D[D.length-1],{day:"numeric",month:"short"})} · ${D.length} days`:"Set your dates in the menu";
+ const t=new Date();t.setHours(12,0,0,0);const ti=D.findIndex(d=>key(d)===key(t));
+ $("count").textContent=!D.length?"":ti>=0?`Today is day ${ti+1}`:t<D[0]?`${Math.round((D[0]-t)/864e5)} days to go`:"Hope it was lovely";
+ $("slider").innerHTML=D.map((d,i)=>{const pid=planFor(d,i,D.length),p=P[pid],[ic,col]=look(pid),k=key(d),ph=(S.pic[k]||[])[0],n=stops(k,pid).length;
+  return`<button class="card grain" data-i="${i}" style="background:${col}" aria-label="${esc(fmt(d,{weekday:"long",day:"numeric",month:"long"})+", "+p.t)}">${ph?`<img class="ph" src="${ph}" alt=""><span class="shade"></span>`:art(ic)}<span class="chip glass">${fmt(d,{weekday:"short",day:"numeric",month:"short"})}</span><span class="meta"><span><h2>${esc(p.t)}</h2><small>${K[p.k][0]} · ${n} stop${n==1?"":"s"}</small></span><span class="go glass">→</span></span></button>`}).join("");
+ requestAnimationFrame(()=>{centre(cur,false);mark()})}
+function centre(i,smooth=true){const s=$("slider"),c=s.children[i];if(!c)return;s.scrollTo({left:c.offsetLeft-(s.clientWidth-c.clientWidth)/2,behavior:smooth?"smooth":"auto"})}
+function mark(){const s=$("slider"),m=s.scrollLeft+s.clientWidth/2;let best=0,bd=1e9;[...s.children].forEach((c,i)=>{const d=Math.abs(c.offsetLeft+c.clientWidth/2-m);if(d<bd){bd=d;best=i}});
+ [...s.children].forEach((c,i)=>c.classList.toggle("on",i===best));cur=best;$("pos").textContent=s.children.length?`${best+1} / ${s.children.length}`:""}
+let raf=0;$("slider").addEventListener("scroll",()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(mark)},{passive:true});
+$("slider").addEventListener("click",e=>{const c=e.target.closest(".card");if(!c)return;const i=+c.dataset.i;if(i===cur)location.hash="day-"+(i+1);else centre(i)});
+$("pv").onclick=()=>centre(Math.max(0,cur-1));$("nx").onclick=()=>centre(Math.min(days().length-1,cur+1));
+
+function stops(k,pid){const p=P[pid],hk=k+"|"+pid,hid=S.hide[hk]||[];return p.s.map((x,j)=>({t:x[0],x:x[1],pl:x[2],b:j})).filter(it=>!hid.includes(it.b)).concat((S.add[k]||[]).map((x,j)=>({t:x.t,x:x.x,pl:x.pl,mine:j})))}
+function renderDay(){const D=days();if(!D.length){location.hash="";return}cur=Math.min(cur,D.length-1);
+ const d=D[cur],k=key(d),pid=planFor(d,cur,D.length),p=P[pid],[ic,col]=look(pid),pics=S.pic[k]||[],hk=k+"|"+pid,hid=S.hide[hk]||[],items=stops(k,pid);
+ document.body.style.setProperty("--kc",col);
+ $("hero").style.background=col;
+ $("hero").innerHTML=`${pics.length?`<img class="ph" src="${pics[0]}" alt=""><span class="shade"></span>`:art(ic)}<span class="shade"></span>
+ <div class="bar"><button class="ib glass" id="back" aria-label="Back to all days"><svg><use href="#i-back"/></svg></button><button class="ib glass menu" aria-label="Open menu"><svg><use href="#i-menu"/></svg></button></div>
+ <div class="ttl"><div><p>${fmt(d,{weekday:"long",day:"numeric",month:"long"})}</p><h1>${esc(p.t)}</h1></div><div class="arrows"><button class="ib glass" id="dpv" aria-label="Previous day"${cur?"":" disabled"}><svg><use href="#i-back"/></svg></button><button class="ib glass" id="dnx" aria-label="Next day"${cur<D.length-1?"":" disabled"}><svg><use href="#i-next"/></svg></button></div></div>`;
+ $("sheet").innerHTML=`<div class="stats"><div><b>${cur+1}/${D.length}</b><span>Day</span></div><div><b>${items.length}</b><span>Stops</span></div><div><b>${K[p.k][0]}</b><span>Type</span></div></div>
+ <p class="go-line">${esc(p.go)}</p>
+ <ol class="route">${hid.length?`<li><time></time><span></span><div><button class="del" data-show="${hk}">Restore ${hid.length} removed stop${hid.length>1?"s":""}</button></div></li>`:""}${items.map(it=>`<li class="${it.mine!==undefined?"mine":""}"><time>${esc(it.t||"")}</time><span class="pin"></span><div><div class="row1"><div class="t">${esc(it.x)}</div>${it.mine!==undefined?`<button class="x" data-del="${it.mine}" aria-label="Remove stop">✕</button>`:`<button class="x" data-hide="${hk}" data-b="${it.b}" aria-label="Remove stop">✕</button>`}</div>${it.pl?`<div class="links"><a href="${mapL(it.pl)}" target="_blank" rel="noopener">Map</a><a href="${dirL(it.pl)}" target="_blank" rel="noopener">Directions</a><a href="${picL(it.pl)}" target="_blank" rel="noopener">Photos</a></div>`:""}</div></li>`).join("")}</ol>
+ <div class="blk"><h3>Eat</h3><div class="chips">${p.e.map(x=>`<span>${esc(x)}</span>`).join("")}</div></div>
+ ${p.n.length?`<div class="blk"><h3>Good to know</h3>${p.n.map(x=>`<p class="tip">${esc(x)}</p>`).join("")}</div>`:""}
+ <div class="blk"><details class="fold"><summary>Change plan</summary><select id="swap" aria-label="Plan for this day">${Object.entries(P).map(([id,v])=>`<option value="${id}"${id===pid?" selected":""}>${esc(v.t)}</option>`).join("")}</select></details>
+ <details class="fold"><summary>Add a stop</summary><form class="addf" id="addf"><input id="at" placeholder="Time" aria-label="Time"><input id="ax" placeholder="What" aria-label="What" required><input class="full" id="ap" placeholder="Place (for the map)" aria-label="Place"><button class="btn full" type="submit">Add</button></form></details>
+ <details class="fold"><summary>Photos</summary><p class="note">Your first photo becomes this day's cover. Saved on this phone only.</p><input type="file" id="pf" accept="image/*" multiple aria-label="Add photos"><div class="photos">${pics.map((src,j)=>`<figure><img src="${src}" alt="Photo ${j+1}"><button class="del" data-pdel="${j}" aria-label="Remove photo">✕</button></figure>`).join("")}</div></details>
+ <details class="fold"><summary>Share</summary><button class="btn ghost" id="copy">Copy day for WhatsApp</button></details></div>`;}
+
+function renderCk(){let n=0,dn=0;$("ck").innerHTML=Object.keys(LISTS).map(L=>`<h4>${LN[L]}</h4><ul>${LISTS[L].concat(S.cl[L]).map(t=>{const id=L+":"+t,on=!!S.chk[id];n++;if(on)dn++;return`<li class="${on?"done":""}"><label><input type="checkbox" data-ck="${esc(id)}"${on?" checked":""}><span>${esc(t)}</span></label></li>`}).join("")}</ul><form data-cl="${L}"><input placeholder="Add item" aria-label="Add item to ${LN[L]}"><button class="btn" type="submit">Add</button></form>`).join("");$("prog").textContent=`${dn}/${n}`}
+function renderMenu(){renderCk();const h=(S.ig||"").replace(/^@/,"");document.querySelectorAll(".iglink").forEach(a=>{a.hidden=!h;a.href="https://instagram.com/"+encodeURIComponent(h);a.innerHTML=a.classList.contains("ig")?`${art("logo","").replace('class=""','style="width:30px;height:30px"')}@${esc(h)}`:"@"+esc(h)});
+ $("d1").value=S.a;$("d2").value=S.b;$("hm").value=S.home||"";if(document.activeElement!==$("igi"))$("igi").value=S.ig}
+function refresh(){if(view==="day")renderDay();else renderHome();renderMenu();$("undoBtn").hidden=!S.h.length}
+function routeView(){const m=location.hash.match(/^#day-(\d+)$/),D=days();
+ if(m&&D.length){cur=Math.min(D.length-1,Math.max(0,+m[1]-1));view="day";$("home").hidden=true;$("dayv").hidden=false;renderDay();scrollTo(0,0)}
+ else{view="home";$("dayv").hidden=true;$("home").hidden=false;renderHome()}}
+addEventListener("hashchange",routeView);
+const openMenu=o=>{$("drawer").classList.toggle("open",o);$("scrim").hidden=!o;$("drawer").setAttribute("aria-hidden",!o);if(o)$("close").focus()};
+$("close").onclick=$("scrim").onclick=()=>openMenu(false);
+addEventListener("keydown",e=>{if(e.key==="Escape")openMenu(false)});
+
+document.addEventListener("click",e=>{const t=e.target.closest("button,a")||e.target;
+ if(t.closest&&t.closest(".menu")){openMenu(true);return}
+ if(t.id==="back"){location.hash="";return}
+ if(t.id==="dpv"){location.hash="day-"+cur;return}
+ if(t.id==="dnx"){location.hash="day-"+(cur+2);return}
+ if(t.id==="undoBtn"){undo();return}
+ const D=days();if(!D.length)return;const k=key(D[cur]);
+ if(t.dataset.del!==undefined){commit(()=>S.add[k].splice(+t.dataset.del,1))}
+ if(t.dataset.hide){const h=t.dataset.hide,b=+t.dataset.b;commit(()=>(S.hide[h]=S.hide[h]||[]).push(b))}
+ if(t.dataset.show){const h=t.dataset.show;commit(()=>delete S.hide[h])}
+ if(t.dataset.pdel!==undefined){S.pic[k].splice(+t.dataset.pdel,1);save();refresh()}
+ if(t.id==="copy"){const pid=planFor(D[cur],cur,D.length),p=P[pid],txt="Naarm Visit · "+fmt(D[cur],{weekday:"short",day:"numeric",month:"short"})+" · "+p.t+"\n"+p.go+"\n"+stops(k,pid).map(x=>"• "+(x.t?x.t+" ":"")+x.x+(x.pl?" "+mapL(x.pl):"")).join("\n");
+  try{navigator.clipboard.writeText(txt).then(()=>{t.textContent="Copied ✓"},()=>{t.textContent="Copy blocked"})}catch(err){t.textContent="Copy blocked"}}});
+document.addEventListener("change",e=>{const t=e.target,D=days();
+ if(t.id==="d1")return commit(()=>S.a=t.value);if(t.id==="d2")return commit(()=>S.b=t.value);
+ if(t.id==="hm"){S.home=t.value.trim();save();return refresh()}
+ if(t.id==="igi")return commit(()=>S.ig=t.value.trim());
+ if(t.dataset.ck){const id=t.dataset.ck,v=t.checked;return commit(()=>S.chk[id]=v)}
+ if(!D.length)return;const k=key(D[cur]);
+ if(t.id==="swap"){const v=t.value;commit(()=>S.plan[k]=v)}
+ if(t.id==="pf"){[...t.files].forEach(f=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement("canvas"),s=Math.min(1,1000/Math.max(im.width,im.height));c.width=im.width*s;c.height=im.height*s;c.getContext("2d").drawImage(im,0,0,c.width,c.height);(S.pic[k]=S.pic[k]||[]).push(c.toDataURL("image/jpeg",.72));save();refresh()};im.src=r.result};r.readAsDataURL(f)});t.value=""}});
+document.addEventListener("submit",e=>{e.preventDefault();const f=e.target;
+ if(f.dataset.cl){const L=f.dataset.cl,v=f.querySelector("input").value.trim();if(v)commit(()=>S.cl[L].push(v));return}
+ if(f.id==="addf"){const k=key(days()[cur]),it={t:$("at").value,x:$("ax").value,pl:$("ap").value};commit(()=>(S.add[k]=S.add[k]||[]).push(it))}});
+$("reset").onclick=()=>commit(()=>S.plan={});
+$("check").innerHTML=CHECK.map(r=>`<li><span class="${r[0]}">${r[0]=="ok"?"✓":"✕"}</span> <b>${r[1]}</b><br><span class="note">${r[2]}</span></li>`).join("");
+$("mark").innerHTML=art("logo","").replace('class=""','style="width:30px;height:30px"');
+{const D=days(),t=new Date();t.setHours(12);const ti=D.findIndex(d=>key(d)===key(t));if(ti>=0)cur=ti}
+try{if("serviceWorker" in navigator&&/github\.io$/.test(location.hostname))navigator.serviceWorker.register("sw.js")}catch(e){}
+routeView();renderMenu();$("undoBtn").hidden=!S.h.length;
+}
+</script>
+</body>
+</html>

@@ -187,7 +187,8 @@ const FIX={"12-16":"graduation","12-25":"christmas","12-26":"work","12-27":"work
 const CHECK=[["ok","William Ricketts Sanctuary","Free · train + bus 688 · in the Dandenongs day"],["ok","Warburton & O'Shannassy","Free · train + bus 683 · full day trip"],["ok","Inner Studio","Paid · tram · optional treat"],["no","Moonlit Sanctuary","$37 · rare buses + 2.5 km road walk · swapped for St Kilda penguins"],["no","Noojee Rail Trail","No transit · swapped for the aqueduct trestle at Warburton"],["no","Drummer Rainforest","~450 km away · swapped for Dandenongs fern gullies"]];
 let S={};try{S=JSON.parse(localStorage.getItem("mtrip")||"{}")}catch(e){}
 if(S.v!==2){S.a="2026-12-14";S.b="2027-01-04";S.plan={};S.v=2}S.plan=S.plan||{};S.add=S.add||{};S.pic=S.pic||{};S.chk=S.chk||{};S.cl=S.cl||{before:[],during:[]};
-S.ig=S.ig|ohlyans_at_naarm|"";S.h=S.h||[];S.hide=S.hide||{};
+S.ig=S.ig|ohlyans_at_naarm
+|"";S.h=S.h||[];S.hide=S.hide||{};
 const SK=["a","b","plan","add","chk","cl","ig","hide"],shared=()=>{const o={};SK.forEach(k=>o[k]=S[k]);return o};
 function refresh(){render();renderCk();$("undoBtn").hidden=!S.h.length;const h=(S.ig||"").replace(/^@/,"");$("ig").hidden=!h;if(h){$("ig").href="https://instagram.com/"+encodeURIComponent(h);$("ig").textContent="@"+h}if(document.activeElement!==$("igi"))$("igi").value=S.ig;$("d1").value=S.a;$("d2").value=S.b}
 function commit(fn){const prev=JSON.stringify(shared());fn();S.h=S.h.concat([prev]).slice(-15);save();refresh()}
